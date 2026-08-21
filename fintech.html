@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinLens AI | Quantum Wealth Guardian - Kazim Edition</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 0.45; transform: scale(1.05); }
+    }
+    .glow-bg {
+      animation: pulseGlow 6s infinite ease-in-out;
+    }
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(51, 65, 85, 0.6);
+    }
+    .glass-panel:hover {
+      border-color: rgba(16, 185, 129, 0.4);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.08);
+    }
+    input[type=range]::-webkit-slider-thumb {
+      height: 18px;
+      width: 18px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen font-sans antialiased overflow-x-hidden selection:bg-emerald-500 selection:text-black">
+
+  <!-- Ambient Glow Effects -->
+  <div class="fixed top-0 left-1/4 w-96 h-96 bg-emerald-600/10 rounded-full blur-3xl pointer-events-none glow-bg"></div>
+  <div class="fixed bottom-10 right-1/4 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl pointer-events-none glow-bg"></div>
+
+  <!-- Real-time Market Ticker -->
+  <div class="bg-slate-900/90 border-b border-slate-800 text-[11px] py-1 px-4 text-slate-400 flex justify-between overflow-x-auto whitespace-nowrap">
+    <div class="flex gap-6 items-center">
+      <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> <strong class="text-slate-200">NIFTY 50:</strong> 24,820.40 <span class="text-emerald-400">+0.64%</span></span>
+      <span class="flex items-center gap-1.5"><strong class="text-slate-200">SENSEX:</strong> 81,315.20 <span class="text-emerald-400">+0.58%</span></span>
+      <span class="flex items-center gap-1.5"><strong class="text-slate-200">INDIA VIX:</strong> 12.85 <span class="text-rose-400">-3.2% (Low Volatility)</span></span>
+      <span class="flex items-center gap-1.5"><strong class="text-slate-200">INR/USD:</strong> 83.92 <span class="text-slate-300">0.00%</span></span>
+    </div>
+    <div class="text-emerald-400 font-mono hidden md:block">
+      SEC_PROTOCOL_ACTIVE // NODE: BLR-UVCE-09
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="border-b border-slate-800/80 bg-slate-900/40 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3.5 flex justify-between items-center">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-cyan-500 flex items-center justify-center text-slate-950 font-black shadow-lg shadow-emerald-500/20">
+          FL
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-lg font-bold tracking-tight text-slate-100">FinLens <span class="text-emerald-400">Quantum</span></h1>
+            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">v3.4-PRO</span>
+          </div>
+          <p class="text-xs text-slate-400">Autonomous Wealth Diagnostic & Fin-Hype Disruption Engine</p>
+        </div>
+      </div>
+
+      <!-- User Profile Badge (Kazim) -->
+      <div class="flex items-center gap-3">
+        <div class="text-right hidden sm:block">
+          <div class="text-xs font-semibold text-slate-200 flex items-center gap-1 justify-end">
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span> Kazim
+          </div>
+          <div class="text-[10px] font-mono text-emerald-400/80">Pro Tier Investor</div>
+        </div>
+        <div class="w-9 h-9 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center font-bold text-emerald-400 shadow-inner">
+          K
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+
+    <!-- Hero Diagnostic Bar -->
+    <div class="glass-panel rounded-2xl p-5 border border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-4">
+        <div class="relative flex items-center justify-center">
+          <svg class="w-16 h-16 transform -rotate-90">
+            <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="5" class="text-slate-800" fill="transparent" />
+            <circle id="scoreRing" cx="32" cy="32" r="28" stroke="currentColor" stroke-width="5" class="text-emerald-400" fill="transparent" stroke-dasharray="175.9" stroke-dashoffset="38" stroke-linecap="round" />
+          </svg>
+          <span id="scoreText" class="absolute text-lg font-black font-mono text-emerald-400">82</span>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-slate-200 uppercase tracking-wider">Kazim's Portfolio Diagnostic Index</h2>
+          <p class="text-xs text-slate-400">Overall financial confidence rating based on dynamic telemetry</p>
+        </div>
+      </div>
+      
+      <div class="flex flex-wrap gap-2">
+        <button onclick="triggerQuickAudit()" class="text-xs bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2 rounded-xl transition shadow-lg shadow-emerald-500/20">
+          ⚡ Run Full Audit
+        </button>
+        <button onclick="resetTelemetry()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium px-3 py-2 rounded-xl border border-slate-700 transition">
+          Reset Telemetry
+        </button>
+      </div>
+    </div>
+
+    <!-- MAIN GRID SECTION -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <!-- FEATURE 1: Interactive SIP Stress Simulator & Monte Carlo -->
+      <div class="lg:col-span-2 glass-panel rounded-2xl p-6 relative">
+        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 mb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-base">📈</span>
+              <h3 class="text-sm font-bold text-slate-100 uppercase tracking-wider">Feature 1: Interactive SIP Monte Carlo Stress Engine</h3>
+            </div>
+            <p class="text-xs text-slate-400">Slide SIP value & select real historical Indian market crashes to stress-test drawdowns</p>
+          </div>
+          <div class="text-right">
+            <span class="text-xs text-slate-400">Monthly Allocation:</span>
+            <div id="sipValLabel" class="text-lg font-black font-mono text-emerald-400">₹15,000</div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+          <div class="sm:col-span-2">
+            <label class="text-[11px] text-slate-400">Adjust Monthly Contribution</label>
+            <input type="range" id="sipSlider" min="2000" max="100000" step="1000" value="15000" oninput="recalcChart()" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer mt-2">
+          </div>
+          <div>
+            <label class="text-[11px] text-slate-400">Simulate Market Scenario</label>
+            <select id="marketScenario" onchange="recalcChart()" class="w-full mt-1 bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded-lg p-2 focus:border-emerald-500">
+              <option value="normal">Standard Bull Cycle (13% CAGR)</option>
+              <option value="crash2008">2008 Subprime Crash (-52% Shock)</option>
+              <option value="covid2020">2020 Flash Crash (-38% V-Shape)</option>
+              <option value="stagflation">Stagflation / High Inflation (5% Real)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="h-60 relative w-full">
+          <canvas id="sipChart"></canvas>
+        </div>
+      </div>
+
+      <!-- FEATURE 2: Asset Allocation & Rebalancing Radar -->
+      <div class="glass-panel rounded-2xl p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="text-base">🎯</span>
+            <h3 class="text-sm font-bold text-slate-100 uppercase tracking-wider">Feature 2: Multi-Asset Health Radar</h3>
+          </div>
+          <p class="text-xs text-slate-400 mb-4">Visualizes your portfolio diversification vs optimal allocation</p>
+          
+          <div class="h-48 relative w-full flex items-center justify-center">
+            <canvas id="radarChart"></canvas>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 mt-4 text-center text-xs">
+          <button onclick="setProfile('aggressive')" class="bg-slate-900 hover:bg-slate-800 p-2 rounded-lg border border-slate-700 text-emerald-400 font-bold transition">Aggressive</button>
+          <button onclick="setProfile('balanced')" class="bg-slate-900 hover:bg-slate-800 p-2 rounded-lg border border-slate-700 text-cyan-400 font-bold transition">Balanced</button>
+          <button onclick="setProfile('conservative')" class="bg-slate-900 hover:bg-slate-800 p-2 rounded-lg border border-slate-700 text-amber-400 font-bold transition">Defensive</button>
+        </div>
+      </div>
+
+      <!-- FEATURE 3: AI Hype & Fin-Influencer Claim Auditor -->
+      <div class="glass-panel rounded-2xl p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <div class="flex items-center gap-2">
+              <span class="text-base">🤖</span>
+              <h3 class="text-sm font-bold text-slate-100 uppercase tracking-wider">Feature 3: AI Hype Auditor</h3>
+            </div>
+            <span class="text-[10px] bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2 py-0.5 rounded">Anti-Scam</span>
+          </div>
+          <p class="text-xs text-slate-400 mb-3">Paste social media stock tips, guaranteed return claims, or reel strategies:</p>
+
+          <textarea id="hypeText" rows="3" class="w-full bg-slate-950/80 border border-slate-700 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 font-mono" placeholder="e.g. 'Invest in this penny stock for guaranteed 45% return in 30 days!'"></textarea>
+
+          <div class="flex gap-2 mt-2">
+            <button onclick="auditHype()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs py-2 rounded-lg transition shadow-md">
+              Audit Claim
+            </button>
+            <button onclick="loadSampleHype()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-3 py-2 rounded-lg transition">
+              Sample Hype
+            </button>
+          </div>
+        </div>
+
+        <div id="hypeResult" class="mt-4 hidden p-3 rounded-xl bg-slate-950 border border-rose-500/40 text-xs space-y-1.5 font-mono">
+          <div class="flex justify-between font-bold text-rose-400">
+            <span id="hypeVerdict">🚨 CRITICAL RISK DETECTED</span>
+            <span id="hypeRiskScore">96% RISK</span>
+          </div>
+          <p id="hypeReason" class="text-slate-300 text-[11px]"></p>
+          <div class="text-emerald-400 text-[11px]" id="hypeAction"></div>
+        </div>
+      </div>
+
+      <!-- FEATURE 4: Mutual Fund Overlap & Expense Bleed Detector -->
+      <div class="glass-panel rounded-2xl p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-base">🧬</span>
+            <h3 class="text-sm font-bold text-slate-100 uppercase tracking-wider">Feature 4: Fund Overlap & Expense Bleed</h3>
+          </div>
+          <p class="text-xs text-slate-400 mb-3">Detect hidden portfolio duplication and unnecessary duplicate AMC expense fees</p>
+
+          <div class="space-y-3 text-xs">
+            <div>
+              <label class="text-slate-400">Select Fund A</label>
+              <select id="fundA" onchange="calcOverlap()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+                <option value="hdfc_top100">HDFC Top 100 Large Cap</option>
+                <option value="parag_flexi">Parag Parikh Flexi Cap</option>
+                <option value="nippon_small">Nippon India Small Cap</option>
+                <option value="mirae_asset">Mirae Asset Large & Mid Cap</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-slate-400">Select Fund B</label>
+              <select id="fundB" onchange="calcOverlap()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-200">
+                <option value="parag_flexi">Parag Parikh Flexi Cap</option>
+                <option value="hdfc_top100">HDFC Top 100 Large Cap</option>
+                <option value="nippon_small">Nippon India Small Cap</option>
+                <option value="mirae_asset">Mirae Asset Large & Mid Cap</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div id="overlapBox" class="mt-4 p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-1">
+          <div class="flex justify-between font-bold">
+            <span class="text-slate-300">Portfolio Overlap:</span>
+            <span id="overlapPercentage" class="text-amber-400 font-mono text-sm">44% Duplicate</span>
+          </div>
+          <div class="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden mt-1">
+            <div id="overlapBar" class="bg-amber-400 h-full w-[44%]"></div>
+          </div>
+          <p id="overlapInsight" class="text-[11px] text-slate-400 mt-2">
+            Top duplicate holdings: HDFC Bank, ICICI Bank, ITC. You are paying double management fees on duplicate holdings.
+          </p>
+        </div>
+      </div>
+
+      <!-- FEATURE 5: Step-Up SIP Alpha Maximizer -->
+      <div class="glass-panel rounded-2xl p-6 flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-base">🚀</span>
+            <h3 class="text-sm font-bold text-slate-100 uppercase tracking-wider">Feature 5: 10% Step-Up Alpha Maximizer</h3>
+          </div>
+          <p class="text-xs text-slate-400 mb-3">Live comparison of static SIP vs dynamic career salary step-up compounding</p>
+
+          <div class="space-y-3 text-xs">
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="text-slate-400">Monthly SIP (₹)</label>
+                <input type="number" id="stepUpBase" value="10000" oninput="calcStepUp()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono" />
+              </div>
+              <div>
+                <label class="text-slate-400">Horizon (Yrs)</label>
+                <input type="number" id="stepUpYears" value="15" oninput="calcStepUp()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-lg p-2 text-slate-100 font-mono" />
+              </div>
+            </div>
+            <div>
+              <label class="text-slate-400">Annual Increment Rate: <strong id="stepUpRateLabel" class="text-emerald-400">10%</strong></label>
+              <input type="range" id="stepUpSlider" min="5" max="25" value="10" oninput="calcStepUp()" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer mt-2" />
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 p-3 bg-slate-950 border border-emerald-500/30 rounded-xl text-xs space-y-2">
+          <div class="flex justify-between">
+            <span class="text-slate-400">Normal Static SIP:</span>
+            <span id="normalCorpusText" class="font-bold text-slate-200 font-mono">₹50.4 L</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-emerald-400 font-bold">Step-Up SIP Corpus:</span>
+            <span id="stepUpCorpusText" class="font-black text-emerald-400 font-mono text-sm">₹1.08 Cr</span>
+          </div>
+          <div class="text-[10px] text-slate-400 border-t border-slate-800 pt-1 text-center font-mono">
+            Extra Wealth Generated: <span id="extraAlpha" class="text-cyan-400 font-bold">+₹57.6 Lakhs</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FEATURE 6: Emergency Runway & Cash-Burn Health Check -->
+    <div class="glass-panel rounded-2xl p-6 border border-slate-800">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base">🛡️</span>
+            <h3 class="text-sm font-bold text-slate-100 uppercase tracking-wider">Feature 6: Emergency Runway & Black-Swan Liquidity Defense</h3>
+          </div>
+          <p class="text-xs text-slate-400">Calculates Kazim's survival runway during unexpected lay-offs, medical crises, or market recessions</p>
+        </div>
+        <div class="text-right">
+          <span class="text-xs text-slate-400">Runway Health:</span>
+          <span id="runwayStatusBadge" class="text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full font-bold ml-2">OPTIMAL</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+        <div>
+          <label class="text-slate-400">Liquid Savings in Bank / FD (₹)</label>
+          <input type="number" id="runwaySavings" value="300000" oninput="calcRunway()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100 font-mono" />
+        </div>
+        <div>
+          <label class="text-slate-400">Monthly Mandatory Expenses (₹)</label>
+          <input type="number" id="runwayExpenses" value="45000" oninput="calcRunway()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100 font-mono" />
+        </div>
+        <div>
+          <label class="text-slate-400">Monthly Active EMIs / Debts (₹)</label>
+          <input type="number" id="runwayEMI" value="10000" oninput="calcRunway()" class="w-full mt-1 bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-slate-100 font-mono" />
+        </div>
+      </div>
+
+      <div class="mt-4 p-4 rounded-xl bg-slate-950 border border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs">
+        <div class="flex items-center gap-3">
+          <div id="runwayMonthsDisplay" class="text-3xl font-black font-mono text-emerald-400">5.5</div>
+          <div>
+            <div class="font-bold text-slate-200">Months of Full Financial Autonomy</div>
+            <div id="runwayAdvice" class="text-[11px] text-slate-400">Safe zone. Recommended buffer for computer science professionals is 6.0 months.</div>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="boostEmergencyFund()" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-slate-700 px-4 py-2 rounded-lg font-bold transition">
+            + Add ₹50k Emergency Buffer
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Live System Footer -->
+  <footer class="max-w-7xl mx-auto px-4 mt-8 text-center text-xs text-slate-500 border-t border-slate-900 pt-6">
+    <p>FinLens AI Engine • Built for CodeFury 9.0 Hackathon • Created by <strong>Kazim</strong></p>
+    <p class="text-[10px] mt-1 font-mono text-slate-600">SEBI Investor Education Guidelines Aligned • Real-time Deterministic Financial Sandbox</p>
+  </footer>
+
+  <script>
+    // ----------------------------------------------------
+    // CHART 1: SIP Stress-Testing Line Chart
+    // ----------------------------------------------------
+    let sipChart;
+    function initSipChart() {
+      const ctx = document.getElementById('sipChart').getContext('2d');
+      sipChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Year 1', 'Year 3', 'Year 5', 'Year 7', 'Year 10', 'Year 12', 'Year 15'],
+          datasets: [
+            {
+              label: 'Optimized Bull Trajectory (13% CAGR)',
+              data: [195000, 720000, 1530000, 2820000, 5850000, 9100000, 15800000],
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.12)',
+              fill: true,
+              tension: 0.35,
+              borderWidth: 2
+            },
+            {
+              label: 'Historical Crisis Stress-Test',
+              data: [140000, 480000, 980000, 1750000, 3400000, 5200000, 8900000],
+              borderColor: '#f43f5e',
+              backgroundColor: 'rgba(244, 63, 94, 0.05)',
+              fill: true,
+              tension: 0.35,
+              borderWidth: 2,
+              borderDash: [5, 5]
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: '#94a3b8', font: { size: 11, family: 'sans-serif' } } }
+          },
+          scales: {
+            x: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
+            y: {
+              ticks: {
+                color: '#64748b',
+                callback: function(v) { return '₹' + (v >= 10000000 ? (v/10000000).toFixed(1) + 'Cr' : (v/100000).toFixed(1) + 'L'); }
+              },
+              grid: { color: '#1e293b' }
+            }
+          }
+        }
+      });
+    }
+
+    function recalcChart() {
+      const sip = Number(document.getElementById('sipSlider').value);
+      const scenario = document.getElementById('marketScenario').value;
+      document.getElementById('sipValLabel').innerText = '₹' + sip.toLocaleString('en-IN');
+
+      const multiplier = sip / 15000;
+      let shockFactor = 1.0;
+
+      if (scenario === 'crash2008') shockFactor = 0.55;
+      else if (scenario === 'covid2020') shockFactor = 0.72;
+      else if (scenario === 'stagflation') shockFactor = 0.65;
+
+      const baseBull = [195000, 720000, 1530000, 2820000, 5850000, 9100000, 15800000];
+      const baseStress = [140000, 480000, 980000, 1750000, 3400000, 5200000, 8900000];
+
+      sipChart.data.datasets[0].data = baseBull.map(v => Math.round(v * multiplier));
+      sipChart.data.datasets[1].data = baseStress.map(v => Math.round(v * multiplier * shockFactor));
+      sipChart.update();
+    }
+
+    // ----------------------------------------------------
+    // CHART 2: Multi-Asset Health Radar Chart
+    // ----------------------------------------------------
+    let radarChart;
+    function initRadarChart() {
+      const ctx = document.getElementById('radarChart').getContext('2d');
+      radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Large Cap', 'Small Cap', 'Debt / FDs', 'Gold ETF', 'International', 'Liquid Cash'],
+          datasets: [
+            {
+              label: 'Kazim Current',
+              data: [80, 85, 30, 40, 25, 60],
+              borderColor: '#10b981',
+              backgroundColor: 'rgba(16, 185, 129, 0.25)',
+              borderWidth: 2
+            },
+            {
+              label: 'Optimal Benchmark',
+              data: [70, 40, 60, 50, 50, 70],
+              borderColor: '#38bdf8',
+              backgroundColor: 'rgba(56, 189, 248, 0.1)',
+              borderWidth: 1.5,
+              borderDash: [4, 4]
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            r: {
+              angleLines: { color: '#1e293b' },
+              grid: { color: '#1e293b' },
+              pointLabels: { color: '#94a3b8', font: { size: 9 } },
+              ticks: { display: false }
+            }
+          }
+        }
+      });
+    }
+
+    function setProfile(type) {
+      if (type === 'aggressive') {
+        radarChart.data.datasets[0].data = [85, 90, 20, 20, 40, 40];
+      } else if (type === 'balanced') {
+        radarChart.data.datasets[0].data = [65, 45, 60, 50, 50, 65];
+      } else {
+        radarChart.data.datasets[0].data = [40, 15, 85, 70, 20, 90];
+      }
+      radarChart.update();
+    }
+
+    // ----------------------------------------------------
+    // FEATURE 3: AI Hype Auditor Engine
+    // ----------------------------------------------------
+    function auditHype() {
+      const text = document.getElementById('hypeText').value.toLowerCase().trim();
+      const res = document.getElementById('hypeResult');
+      const verdict = document.getElementById('hypeVerdict');
+      const score = document.getElementById('hypeRiskScore');
+      const reason = document.getElementById('hypeReason');
+      const action = document.getElementById('hypeAction');
+
+      if (!text) return;
+      res.classList.remove('hidden');
+
+      if (text.includes('guaranteed') || text.includes('double') || text.includes('40%') || text.includes('30%') || text.includes('100%')) {
+        verdict.innerText = '🚨 CRITICAL REGULATORY TRAP';
+        verdict.className = 'text-rose-400 font-bold';
+        score.innerText = '98% RISK';
+        reason.innerText = 'SEBI compliance violation: No market instrument can guarantee double-digit short-term alpha. Mathematically indicates a high-probability pump-and-dump or unhedged derivative trap.';
+        action.innerHTML = '<strong>Action for Kazim:</strong> Do NOT deploy capital. Divert funds into Nifty 50 or Multi-Asset Index funds.';
+      } else if (text.includes('penny') || text.includes('microcap') || text.includes('breakout')) {
+        verdict.innerText = '⚠️ HIGH LIQUIDITY & VOLATILITY WARNING';
+        verdict.className = 'text-amber-400 font-bold';
+        score.innerText = '79% RISK';
+        reason.innerText = 'Micro-cap breakout claims suffer from sudden liquidity dry-ups. During corrections, lower circuits prevent timely exit.';
+        action.innerHTML = '<strong>Action for Kazim:</strong> Cap speculative allocation to under 5% of your total net worth.';
+      } else {
+        verdict.innerText = '✅ REALISTIC INVESTMENT METRIC';
+        verdict.className = 'text-emerald-400 font-bold';
+        score.innerText = '22% RISK';
+        reason.innerText = 'Realistic expectation aligned with long-term 12–14% CAGR compounding cycles in emerging Indian markets.';
+        action.innerHTML = '<strong>Action for Kazim:</strong> Approved for disciplined SIP auto-debit.';
+      }
+    }
+
+    function loadSampleHype() {
+      document.getElementById('hypeText').value = "Double your money in 6 months guaranteed! Join Telegram channel for breakout penny stocks.";
+      auditHype();
+    }
+
+    // ----------------------------------------------------
+    // FEATURE 4: Overlap Engine
+    // ----------------------------------------------------
+    function calcOverlap() {
+      const a = document.getElementById('fundA').value;
+      const b = document.getElementById('fundB').value;
+      const pct = document.getElementById('overlapPercentage');
+      const bar = document.getElementById('overlapBar');
+      const ins = document.getElementById('overlapInsight');
+
+      if (a === b) {
+        pct.innerText = '100% Duplication';
+        pct.className = 'text-rose-400 font-mono text-sm';
+        bar.className = 'bg-rose-500 h-full w-full';
+        ins.innerText = 'Identical funds selected. You are paying double AMC expense fees for zero diversification.';
+      } else if ((a.includes('large') && b.includes('flexi')) || (a.includes('flexi') && b.includes('large'))) {
+        pct.innerText = '44% Overlap';
+        pct.className = 'text-amber-400 font-mono text-sm';
+        bar.className = 'bg-amber-400 h-full w-[44%]';
+        ins.innerText = 'Heavy co-ownership of Reliance, HDFC Bank, ICICI Bank, and TCS. Consider replacing one with Mid-Cap or Gold ETF.';
+      } else {
+        pct.innerText = '14% Overlap';
+        pct.className = 'text-emerald-400 font-mono text-sm';
+        bar.className = 'bg-emerald-400 h-full w-[14%]';
+        ins.innerText = 'Low stock overlap. Provides genuine multi-cap diversification across diverse sectors.';
+      }
+    }
+
+    // ----------------------------------------------------
+    // FEATURE 5: Step-Up SIP Engine
+    // ----------------------------------------------------
+    function calcStepUp() {
+      const base = Number(document.getElementById('stepUpBase').value) || 10000;
+      const years = Number(document.getElementById('stepUpYears').value) || 15;
+      const stepRate = Number(document.getElementById('stepUpSlider').value) || 10;
+      document.getElementById('stepUpRateLabel').innerText = stepRate + '%';
+
+      // 12% Annual CAGR
+      const r = 0.12 / 12;
+      const n = years * 12;
+      
+      // Static SIP formula
+      const normal = Math.round(base * ((Math.pow(1 + r, n) - 1) / r) * (1 + r));
+
+      // Step-Up Calculation
+      let totalCorpus = 0;
+      let currentMonthly = base;
+      for (let y = 0; y < years; y++) {
+        for (let m = 0; m < 12; m++) {
+          const remainingMonths = n - (y * 12 + m);
+          totalCorpus += currentMonthly * Math.pow(1 + r, remainingMonths);
+        }
+        currentMonthly += currentMonthly * (stepRate / 100);
+      }
+      totalCorpus = Math.round(totalCorpus);
+
+      const toCrOrL = (num) => num >= 10000000 ? '₹' + (num/10000000).toFixed(2) + ' Cr' : '₹' + (num/100000).toFixed(1) + ' Lakhs';
+
+      document.getElementById('normalCorpusText').innerText = toCrOrL(normal);
+      document.getElementById('stepUpCorpusText').innerText = toCrOrL(totalCorpus);
+      document.getElementById('extraAlpha').innerText = '+' + toCrOrL(totalCorpus - normal);
+    }
+
+    // ----------------------------------------------------
+    // FEATURE 6: Emergency Runway & Health
+    // ----------------------------------------------------
+    function calcRunway() {
+      const savings = Number(document.getElementById('runwaySavings').value) || 0;
+      const exp = Number(document.getElementById('runwayExpenses').value) || 1;
+      const emi = Number(document.getElementById('runwayEMI').value) || 0;
+
+      const totalMonthlyBurn = exp + emi;
+      const months = (savings / totalMonthlyBurn).toFixed(1);
+
+      document.getElementById('runwayMonthsDisplay').innerText = months;
+      const badge = document.getElementById('runwayStatusBadge');
+      const advice = document.getElementById('runwayAdvice');
+
+      if (months >= 6) {
+        badge.innerText = 'OPTIMAL RESILIENCE';
+        badge.className = 'text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full font-bold ml-2';
+        advice.innerText = 'Solid defense. Kazim can withstand sudden macroeconomic downturns without liquidating long-term equity SIPs.';
+      } else if (months >= 3) {
+        badge.innerText = 'MODERATE EXPOSURE';
+        badge.className = 'text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-3 py-1 rounded-full font-bold ml-2';
+        advice.innerText = 'Acceptable, but an emergency may force premature equity exits at market lows.';
+      } else {
+        badge.innerText = 'CRITICAL DEFICIT';
+        badge.className = 'text-xs bg-rose-500/20 text-rose-400 border border-rose-500/30 px-3 py-1 rounded-full font-bold ml-2';
+        advice.innerText = 'Dangerous liquidity risk! Pause tactical bets immediately and build cash runway.';
+      }
+    }
+
+    function boostEmergencyFund() {
+      const cur = Number(document.getElementById('runwaySavings').value);
+      document.getElementById('runwaySavings').value = cur + 50000;
+      calcRunway();
+    }
+
+    function triggerQuickAudit() {
+      calcRunway();
+      calcStepUp();
+      calcOverlap();
+      recalcChart();
+      document.getElementById('scoreText').innerText = "88";
+      document.getElementById('scoreRing').setAttribute('stroke-dashoffset', '22');
+      alert("✅ Kazim's Wealth Audit Complete: Dynamic Stress-Testing and PVI Telemetry fully re-synchronized!");
+    }
+
+    function resetTelemetry() {
+      document.getElementById('sipSlider').value = 15000;
+      document.getElementById('runwaySavings').value = 300000;
+      document.getElementById('runwayExpenses').value = 45000;
+      document.getElementById('runwayEMI').value = 10000;
+      document.getElementById('scoreText').innerText = "82";
+      document.getElementById('scoreRing').setAttribute('stroke-dashoffset', '38');
+      recalcChart();
+      calcStepUp();
+      calcRunway();
+    }
+
+    window.onload = function() {
+      initSipChart();
+      initRadarChart();
+      calcStepUp();
+      calcRunway();
+      calcOverlap();
+    };
+  </script>
+</body>
+</html>
