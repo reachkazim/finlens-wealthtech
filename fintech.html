@@ -99,14 +99,17 @@
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-lg font-bold tracking-tight text-slate-100">FinLens <span class="text-emerald-400">Quantum</span></h1>
-            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">v3.4-PRO</span>
+            <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-mono">v4.0-PRO</span>
           </div>
-          <p class="text-xs text-slate-400">Autonomous Wealth Diagnostic & Fin-Hype Disruption Engine</p>
+          <p class="text-xs text-slate-400">Autonomous Wealth Diagnostic & AI Financial Intelligence Engine</p>
         </div>
       </div>
 
-      <!-- User Profile Badge & Logout -->
+      <!-- User Profile Badge & AI Chat Button -->
       <div class="flex items-center gap-3">
+        <button onclick="toggleChat()" class="text-xs bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl transition flex items-center gap-1.5 shadow-lg shadow-emerald-500/20">
+          <span>💬</span> AI Advisor
+        </button>
         <div class="text-right hidden sm:block">
           <div class="text-xs font-semibold text-slate-200 flex items-center gap-1 justify-end">
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span> <span id="navUsername">Kazim</span>
@@ -385,15 +388,54 @@
 
   </main>
 
+  <!-- FLOATING AI CHATBOT DRAWER (PROMPT BONUS 2) -->
+  <div id="chatDrawer" class="fixed bottom-6 right-6 w-96 max-w-[calc(100vw-2rem)] glass-panel border border-emerald-500/50 rounded-2xl shadow-2xl z-50 flex flex-col overflow-hidden hidden">
+    <!-- Chat Header -->
+    <div class="bg-slate-900/90 p-4 border-b border-slate-800 flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xs">
+          🤖
+        </div>
+        <div>
+          <h4 class="text-xs font-bold text-slate-100">QuantumBot AI Advisor</h4>
+          <span class="text-[10px] text-emerald-400 flex items-center gap-1 font-mono"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Online & Analyzing</span>
+        </div>
+      </div>
+      <button onclick="toggleChat()" class="text-slate-400 hover:text-slate-200 text-sm">✕</button>
+    </div>
+
+    <!-- Chat Messages Body -->
+    <div id="chatMessages" class="p-4 h-72 overflow-y-auto space-y-3 text-xs">
+      <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl text-slate-300">
+        👋 Hi <strong>Kazim</strong>! I am your AI Wealth Guardian. Ask me anything about your SIPs, stock overlap, inflation hedging, or post-grad financial runway.
+      </div>
+    </div>
+
+    <!-- Quick Prompt Chips -->
+    <div class="px-4 py-2 bg-slate-950/60 flex gap-1.5 overflow-x-auto text-[10px] text-emerald-300 whitespace-nowrap border-t border-slate-800/60">
+      <button onclick="sendQuickPrompt('How to reach ₹1 Crore fastest?')" class="bg-slate-900 hover:bg-slate-800 px-2 py-1 rounded border border-slate-700">🚀 Target ₹1 Cr</button>
+      <button onclick="sendQuickPrompt('Why is Small-Cap risky right now?')" class="bg-slate-900 hover:bg-slate-800 px-2 py-1 rounded border border-slate-700">⚠️ Small-Cap Risk</button>
+      <button onclick="sendQuickPrompt('Should I stop SIP during a market crash?')" class="bg-slate-900 hover:bg-slate-800 px-2 py-1 rounded border border-slate-700">📉 Crash Strategy</button>
+    </div>
+
+    <!-- Chat Input Form -->
+    <div class="p-3 bg-slate-900/90 border-t border-slate-800 flex gap-2">
+      <input type="text" id="chatInput" onkeydown="if(event.key==='Enter') sendChatMessage()" placeholder="Ask FinLens AI..." class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100 focus:outline-none focus:border-emerald-500 font-mono" />
+      <button onclick="sendChatMessage()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs transition">
+        Send
+      </button>
+    </div>
+  </div>
+
   <!-- Live System Footer -->
   <footer class="max-w-7xl mx-auto px-4 mt-8 text-center text-xs text-slate-500 border-t border-slate-900 pt-6">
     <p>FinLens AI Engine • Built for CodeFury 9.0 Hackathon • Created by <strong>Kazim</strong></p>
-    <p class="text-[10px] mt-1 font-mono text-slate-600">SEBI Investor Education Guidelines Aligned • Protected with Tokenized User Authentication</p>
+    <p class="text-[10px] mt-1 font-mono text-slate-600">Equipped with Tokenized Authentication & Interactive AI Advisor</p>
   </footer>
 
   <script>
     // ----------------------------------------------------
-    // USER AUTHENTICATION LOGIC (BONUS FEATURE)
+    // AUTHENTICATION LOGIC (BONUS 1)
     // ----------------------------------------------------
     function checkAuth() {
       const user = localStorage.getItem('finlens_auth_user');
@@ -429,7 +471,59 @@
     }
 
     // ----------------------------------------------------
-    // CHART 1: SIP Stress-Testing Line Chart
+    // AI CHATBOT LOGIC (BONUS 2)
+    // ----------------------------------------------------
+    function toggleChat() {
+      const drawer = document.getElementById('chatDrawer');
+      drawer.classList.toggle('hidden');
+    }
+
+    function sendQuickPrompt(text) {
+      document.getElementById('chatInput').value = text;
+      sendChatMessage();
+    }
+
+    function sendChatMessage() {
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const container = document.getElementById('chatMessages');
+
+      // Add user message
+      const userDiv = document.createElement('div');
+      userDiv.className = 'bg-emerald-950/80 border border-emerald-500/30 p-2.5 rounded-xl text-emerald-200 text-right ml-8';
+      userDiv.innerText = text;
+      container.appendChild(userDiv);
+      input.value = '';
+      container.scrollTop = container.scrollHeight;
+
+      // Simulated Intelligent Response
+      setTimeout(() => {
+        const aiDiv = document.createElement('div');
+        aiDiv.className = 'bg-slate-900 border border-slate-800 p-2.5 rounded-xl text-slate-300 mr-8 space-y-1';
+        
+        const q = text.toLowerCase();
+        let response = "";
+
+        if (q.includes('1 crore') || q.includes('target')) {
+          response = "To reach ₹1 Crore in 10 years at 12% CAGR, you need a starting SIP of ₹17,500/month with a 10% annual Step-Up. Without step-up, you'll need ₹43,000/month!";
+        } else if (q.includes('smallcap') || q.includes('small-cap')) {
+          response = "Small-caps have high beta (volatility). In a downturn, small caps historically drop 35-50% vs Large Caps' 20%. Keep small-cap allocation capped under 25% of your total equity.";
+        } else if (q.includes('crash') || q.includes('downturn')) {
+          response = "Never stop SIPs during crashes! SIP units bought during corrections average down your purchase cost (Rupee Cost Averaging), which creates explosive alpha when markets rebound.";
+        } else {
+          response = `Based on Kazim's risk profile (Score: 82), prioritize a 70:30 Equity to Debt ratio with at least 6 months of liquid cash runway before expanding into speculative assets.`;
+        }
+
+        aiDiv.innerHTML = `<span class="text-emerald-400 font-bold">QuantumBot:</span> ${response}`;
+        container.appendChild(aiDiv);
+        container.scrollTop = container.scrollHeight;
+      }, 500);
+    }
+
+    // ----------------------------------------------------
+    // CHART 1: SIP Monte Carlo Line Chart
     // ----------------------------------------------------
     let sipChart;
     function initSipChart() {
@@ -464,7 +558,7 @@
           responsive: true,
           maintainAspectRatio: false,
           plugins: {
-            legend: { labels: { color: '#94a3b8', font: { size: 11, family: 'sans-serif' } } }
+            legend: { labels: { color: '#94a3b8', font: { size: 11 } } }
           },
           scales: {
             x: { ticks: { color: '#64748b' }, grid: { color: '#1e293b' } },
@@ -569,14 +663,14 @@
         verdict.innerText = '🚨 CRITICAL REGULATORY TRAP';
         verdict.className = 'text-rose-400 font-bold';
         score.innerText = '98% RISK';
-        reason.innerText = 'SEBI compliance violation: No market instrument can guarantee double-digit short-term alpha. Mathematically indicates a high-probability pump-and-dump or unhedged derivative trap.';
+        reason.innerText = 'SEBI compliance violation: No market instrument can guarantee double-digit short-term alpha. Indicates high-probability pump-and-dump or unhedged derivative trap.';
         action.innerHTML = '<strong>Action for Kazim:</strong> Do NOT deploy capital. Divert funds into Nifty 50 or Multi-Asset Index funds.';
       } else if (text.includes('penny') || text.includes('microcap') || text.includes('breakout')) {
         verdict.innerText = '⚠️ HIGH LIQUIDITY & VOLATILITY WARNING';
         verdict.className = 'text-amber-400 font-bold';
         score.innerText = '79% RISK';
         reason.innerText = 'Micro-cap breakout claims suffer from sudden liquidity dry-ups. During corrections, lower circuits prevent timely exit.';
-        action.innerHTML = '<strong>Action for Kazim:</strong> Cap speculative allocation to under 5% of your total net worth.';
+        action.innerHTML = '<strong>Action for Kazim:</strong> Cap speculative allocation to under 5% of total net worth.';
       } else {
         verdict.innerText = '✅ REALISTIC INVESTMENT METRIC';
         verdict.className = 'text-emerald-400 font-bold';
@@ -667,7 +761,7 @@
       if (months >= 6) {
         badge.innerText = 'OPTIMAL RESILIENCE';
         badge.className = 'text-xs bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full font-bold ml-2';
-        advice.innerText = 'Solid defense. Kazim can withstand sudden macroeconomic downturns without liquidating long-term equity SIPs.';
+        advice.innerText = 'Solid defense. Kazim can withstand macroeconomic downturns without liquidating long-term equity SIPs.';
       } else if (months >= 3) {
         badge.innerText = 'MODERATE EXPOSURE';
         badge.className = 'text-xs bg-amber-500/20 text-amber-400 border border-amber-500/30 px-3 py-1 rounded-full font-bold ml-2';
@@ -692,7 +786,7 @@
       recalcChart();
       document.getElementById('scoreText').innerText = "88";
       document.getElementById('scoreRing').setAttribute('stroke-dashoffset', '22');
-      alert("✅ Kazim's Wealth Audit Complete: Dynamic Stress-Testing and PVI Telemetry fully re-synchronized!");
+      alert("✅ Kazim's Wealth Audit Complete: Dynamic Stress-Testing, AI Bot, and PVI Telemetry fully re-synchronized!");
     }
 
     function resetTelemetry() {
